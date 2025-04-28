@@ -1,0 +1,58 @@
+datasource db {
+  provider = "postgresql"
+  // Wasp requires that the url is set to the DATABASE_URL environment variable.
+  url      = env("DATABASE_URL")
+}
+
+// Wasp requires the `prisma-client-js` generator to be present.
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  username    String    @unique
+  password    String
+  createdAt   DateTime  @default(now())
+  transactions Transaction[]
+  budgets     Budget[]
+}
+
+model Transaction {
+  id          Int       @id @default(autoincrement())
+  amount      Float
+  description String
+  date        DateTime  @default(now())
+  type        String    // "income" or "expense"
+  categoryId  Int
+  category    Category  @relation(fields: [categoryId], references: [id])
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String
+  type        String    // "income" or "expense"
+  transactions Transaction[]
+  budgetItems BudgetCategory[]
+}
+
+model Budget {
+  id          Int       @id @default(autoincrement())
+  month       Int
+  year        Int
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  categories  BudgetCategory[]
+}
+
+model BudgetCategory {
+  id          Int       @id @default(autoincrement())
+  amount      Float
+  budgetId    Int
+  budget      Budget    @relation(fields: [budgetId], references: [id])
+  categoryId  Int
+  category    Category  @relation(fields: [categoryId], references: [id])
+  @@unique([budgetId, categoryId])
+}

@@ -1,0 +1,176 @@
+app bajeti {
+  wasp: {
+    version: "^0.16.3"
+  },
+  title: "Bajeti - Personal Finance for Tanzanians",
+  head: [
+    "<meta name='viewport' content='width=device-width, initial-scale=1.0' />",
+    "<meta name='description' content='Simple, intuitive personal finance and budgeting app tailored for Tanzanians' />"
+  ],
+  auth: {
+    userEntity: User,
+    methods: {
+      usernameAndPassword: {}
+    },
+    onAuthFailedRedirectTo: "/login"
+  },
+  client: {
+    rootComponent: import { RootComponent } from "@src/components/RootComponent",
+    setupFn: import { clientSetup } from "@src/utils/clientSetup.js"
+  },
+  db: {
+    system: PostgreSQL
+  }
+}
+
+// ==================== Entities ====================
+
+entity User {=psl
+  id          Int       @id @default(autoincrement())
+  username    String    @unique
+  password    String
+  createdAt   DateTime  @default(now())
+  transactions Transaction[]
+  budgets     Budget[]
+psl=}
+
+entity Transaction {=psl
+  id          Int       @id @default(autoincrement())
+  amount      Float
+  description String
+  date        DateTime  @default(now())
+  type        String    // "income" or "expense"
+  categoryId  Int
+  category    Category  @relation(fields: [categoryId], references: [id])
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+psl=}
+
+entity Category {=psl
+  id          Int       @id @default(autoincrement())
+  name        String
+  type        String    // "income" or "expense"
+  transactions Transaction[]
+  budgetItems BudgetCategory[]
+psl=}
+
+entity Budget {=psl
+  id          Int       @id @default(autoincrement())
+  month       Int
+  year        Int
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  categories  BudgetCategory[]
+psl=}
+
+entity BudgetCategory {=psl
+  id          Int       @id @default(autoincrement())
+  amount      Float
+  budgetId    Int
+  budget      Budget    @relation(fields: [budgetId], references: [id])
+  categoryId  Int
+  category    Category  @relation(fields: [categoryId], references: [id])
+  @@unique([budgetId, categoryId])
+psl=}
+
+// ==================== Routes ====================
+
+route LoginRoute { path: "/login", to: LoginPage }
+route SignupRoute { path: "/signup", to: SignupPage }
+route DashboardRoute { path: "/dashboard", to: DashboardPage }
+route TransactionsRoute { path: "/transactions", to: TransactionsPage }
+route BudgetsRoute { path: "/budgets", to: BudgetsPage }
+route RootRoute { path: "/", to: LandingPage }
+
+// ==================== Pages ====================
+
+page LandingPage {
+  component: import { LandingPage } from "@src/pages/LandingPage"
+}
+
+page LoginPage {
+  component: import { LoginPage } from "@src/pages/auth/LoginPage"
+}
+
+page SignupPage {
+  component: import { SignupPage } from "@src/pages/auth/SignupPage"
+}
+
+page DashboardPage {
+  authRequired: true,
+  component: import { DashboardPage } from "@src/pages/DashboardPage"
+}
+
+page TransactionsPage {
+  authRequired: true,
+  component: import { TransactionsPage } from "@src/pages/TransactionsPage"
+}
+
+page BudgetsPage {
+  authRequired: true,
+  component: import { BudgetsPage } from "@src/pages/BudgetsPage"
+}
+
+// ==================== Actions ====================
+
+action createTransaction {
+  fn: import { createTransaction } from "@src/actions/transactions.js",
+  entities: [Transaction, Category, User]
+}
+
+action updateTransaction {
+  fn: import { updateTransaction } from "@src/actions/transactions.js",
+  entities: [Transaction, Category, User]
+}
+
+action deleteTransaction {
+  fn: import { deleteTransaction } from "@src/actions/transactions.js",
+  entities: [Transaction]
+}
+
+action createBudget {
+  fn: import { createBudget } from "@src/actions/budgets.js",
+  entities: [Budget, BudgetCategory, Category, User]
+}
+
+action updateBudget {
+  fn: import { updateBudget } from "@src/actions/budgets.js",
+  entities: [Budget, BudgetCategory, Category, User]
+}
+
+action deleteBudget {
+  fn: import { deleteBudget } from "@src/actions/budgets.js",
+  entities: [Budget, BudgetCategory]
+}
+
+// ==================== Queries ====================
+
+query getTransactions {
+  fn: import { getTransactions } from "@src/queries/transactions.js",
+  entities: [Transaction, Category, User]
+}
+
+query getTransaction {
+  fn: import { getTransaction } from "@src/queries/transactions.js",
+  entities: [Transaction, Category, User]
+}
+
+query getCategories {
+  fn: import { getCategories } from "@src/queries/categories.js",
+  entities: [Category]
+}
+
+query getBudgets {
+  fn: import { getBudgets } from "@src/queries/budgets.js",
+  entities: [Budget, BudgetCategory, Category, User]
+}
+
+query getBudget {
+  fn: import { getBudget } from "@src/queries/budgets.js",
+  entities: [Budget, BudgetCategory, Category, User]
+}
+
+query getDashboardData {
+  fn: import { getDashboardData } from "@src/queries/dashboard.js",
+  entities: [Transaction, Category, Budget, BudgetCategory, User]
+}
