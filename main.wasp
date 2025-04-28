@@ -18,6 +18,9 @@ app bajeti {
     rootComponent: import { RootComponent } from "@src/components/RootComponent",
     setupFn: import { clientSetup } from "@src/utils/clientSetup.js"
   },
+  server: {
+    setupFn: import { serverSetup } from "@src/utils/serverSetup.js"
+  },
   db: {
     system: PostgreSQL
   }

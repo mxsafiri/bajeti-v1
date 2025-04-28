@@ -6,7 +6,7 @@
 - [x] Initialize Wasp project: `wasp new bajeti-v1`
 - [x] Configure project structure
 - [x] Set up Shadcn UI with Tailwind CSS
-- [ ] Create GitHub repository and initial commit
+- [x] Create GitHub repository and initial commit
 
 **Key Files:**
 - `main.wasp`: Core application configuration
@@ -16,10 +16,13 @@
 ### 1.2 Database Schema Design
 - [x] Design core data models in Prisma
 - [x] Create initial schema with User, Transaction, Category entities
-- [ ] Set up database migrations
+- [x] Set up database migrations
 
 **Key Files:**
 - `main.wasp`: Entity definitions
+- `src/utils/supabase.ts`: Supabase client setup
+- `src/utils/dbSetup.ts`: Database initialization
+- `src/types/supabase.ts`: Database type definitions
 - `migrations/`: Database migration files
 
 ### 1.3 Authentication Setup
