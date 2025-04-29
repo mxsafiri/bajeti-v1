@@ -9,6 +9,9 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true,
   },
+  css: {
+    postcss: './postcss.config.js',
+  },
   resolve: {
     alias: {
       '@src': path.resolve(__dirname, './src'),
