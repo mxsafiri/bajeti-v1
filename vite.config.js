@@ -6,14 +6,13 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: '.wasp/build/web',
-    rollupOptions: {
-      input: 'index.html'
-    }
+    outDir: 'dist',
+    emptyOutDir: true,
   },
   resolve: {
     alias: {
-      '@src': path.resolve(__dirname, './src')
+      '@src': path.resolve(__dirname, './src'),
+      '@wasp': path.resolve(__dirname, './.wasp/out/sdk/wasp')
     }
   }
 });
