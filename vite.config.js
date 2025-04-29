@@ -10,7 +10,7 @@ export default defineConfig({
     emptyOutDir: true,
   },
   css: {
-    postcss: './postcss.config.js',
+    devSourcemap: true,
   },
   resolve: {
     alias: {
