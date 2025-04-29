@@ -15,7 +15,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@src': path.resolve(__dirname, './src'),
-      '@wasp': path.resolve(__dirname, './.wasp/out/sdk/wasp')
+      '@wasp': path.resolve(__dirname, './src/wasp-shim')
     }
   }
 });
