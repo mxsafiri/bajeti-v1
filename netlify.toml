@@ -1,0 +1,19 @@
+[build]
+  # This is the directory where the built files will be placed
+  publish = ".wasp/build/web"
+  
+  # This is the command that will be run to build your site
+  command = """
+    npm install -g wasp-lang@latest
+    wasp build
+  """
+
+# Set environment variables
+[build.environment]
+  NODE_VERSION = "18"
+  
+# Redirects for SPA routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
