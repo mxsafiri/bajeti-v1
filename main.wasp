@@ -20,61 +20,8 @@ app bajeti {
   },
   server: {
     setupFn: import { serverSetup } from "@src/utils/serverSetup.js"
-  },
-  db: {
-    system: PostgreSQL
   }
 }
-
-// ==================== Entities ====================
-
-entity User {=psl
-  id          Int       @id @default(autoincrement())
-  username    String    @unique
-  password    String
-  createdAt   DateTime  @default(now())
-  transactions Transaction[]
-  budgets     Budget[]
-psl=}
-
-entity Transaction {=psl
-  id          Int       @id @default(autoincrement())
-  amount      Float
-  description String
-  date        DateTime  @default(now())
-  type        String    // "income" or "expense"
-  categoryId  Int
-  category    Category  @relation(fields: [categoryId], references: [id])
-  userId      Int
-  user        User      @relation(fields: [userId], references: [id])
-psl=}
-
-entity Category {=psl
-  id          Int       @id @default(autoincrement())
-  name        String
-  type        String    // "income" or "expense"
-  transactions Transaction[]
-  budgetItems BudgetCategory[]
-psl=}
-
-entity Budget {=psl
-  id          Int       @id @default(autoincrement())
-  month       Int
-  year        Int
-  userId      Int
-  user        User      @relation(fields: [userId], references: [id])
-  categories  BudgetCategory[]
-psl=}
-
-entity BudgetCategory {=psl
-  id          Int       @id @default(autoincrement())
-  amount      Float
-  budgetId    Int
-  budget      Budget    @relation(fields: [budgetId], references: [id])
-  categoryId  Int
-  category    Category  @relation(fields: [categoryId], references: [id])
-  @@unique([budgetId, categoryId])
-psl=}
 
 // ==================== Routes ====================
 
@@ -117,63 +64,43 @@ page BudgetsPage {
 // ==================== Actions ====================
 
 action createTransaction {
-  fn: import { createTransaction } from "@src/actions/transactions.js",
-  entities: [Transaction, Category, User]
-}
-
-action updateTransaction {
-  fn: import { updateTransaction } from "@src/actions/transactions.js",
+  fn: import { createTransaction } from "@src/actions/transaction.ts",
   entities: [Transaction, Category, User]
 }
 
 action deleteTransaction {
-  fn: import { deleteTransaction } from "@src/actions/transactions.js",
+  fn: import { deleteTransaction } from "@src/actions/transaction.ts",
   entities: [Transaction]
 }
 
 action createBudget {
-  fn: import { createBudget } from "@src/actions/budgets.js",
-  entities: [Budget, BudgetCategory, Category, User]
-}
-
-action updateBudget {
-  fn: import { updateBudget } from "@src/actions/budgets.js",
+  fn: import { createBudget } from "@src/actions/budget.ts",
   entities: [Budget, BudgetCategory, Category, User]
 }
 
 action deleteBudget {
-  fn: import { deleteBudget } from "@src/actions/budgets.js",
+  fn: import { deleteBudget } from "@src/actions/budget.ts",
   entities: [Budget, BudgetCategory]
 }
 
 // ==================== Queries ====================
 
 query getTransactions {
-  fn: import { getTransactions } from "@src/queries/transactions.js",
-  entities: [Transaction, Category, User]
-}
-
-query getTransaction {
-  fn: import { getTransaction } from "@src/queries/transactions.js",
+  fn: import { getTransactions } from "@src/queries/getTransactions.ts",
   entities: [Transaction, Category, User]
 }
 
 query getCategories {
-  fn: import { getCategories } from "@src/queries/categories.js",
+  fn: import { getCategories } from "@src/queries/getCategories.ts",
   entities: [Category]
 }
 
 query getBudgets {
-  fn: import { getBudgets } from "@src/queries/budgets.js",
-  entities: [Budget, BudgetCategory, Category, User]
-}
-
-query getBudget {
-  fn: import { getBudget } from "@src/queries/budgets.js",
+  fn: import { getBudgets } from "@src/queries/getBudgets.ts",
   entities: [Budget, BudgetCategory, Category, User]
 }
 
 query getDashboardData {
-  fn: import { getDashboardData } from "@src/queries/dashboard.js",
+  fn: import { getDashboardData } from "@src/queries/getDashboardData.ts",
   entities: [Transaction, Category, Budget, BudgetCategory, User]
 }

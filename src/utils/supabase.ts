@@ -1,5 +1,138 @@
 import { createClient } from '@supabase/supabase-js';
-import type { Database } from '../types/supabase';
+
+// Define the Database type inline to avoid import issues
+type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+interface Database {
+  public: {
+    Tables: {
+      categories: {
+        Row: {
+          id: number
+          name: string
+          type: string
+          created_at: string
+        }
+        Insert: {
+          id?: number
+          name: string
+          type: string
+          created_at?: string
+        }
+        Update: {
+          id?: number
+          name?: string
+          type?: string
+          created_at?: string
+        }
+      }
+      transactions: {
+        Row: {
+          id: number
+          amount: number
+          description: string
+          date: string
+          type: string
+          category_id: number
+          user_id: number
+          created_at: string
+        }
+        Insert: {
+          id?: number
+          amount: number
+          description: string
+          date?: string
+          type: string
+          category_id: number
+          user_id: number
+          created_at?: string
+        }
+        Update: {
+          id?: number
+          amount?: number
+          description?: string
+          date?: string
+          type?: string
+          category_id?: number
+          user_id?: number
+          created_at?: string
+        }
+      }
+      budgets: {
+        Row: {
+          id: number
+          month: number
+          year: number
+          user_id: number
+          created_at: string
+        }
+        Insert: {
+          id?: number
+          month: number
+          year: number
+          user_id: number
+          created_at?: string
+        }
+        Update: {
+          id?: number
+          month?: number
+          year?: number
+          user_id?: number
+          created_at?: string
+        }
+      }
+      budget_categories: {
+        Row: {
+          id: number
+          amount: number
+          budget_id: number
+          category_id: number
+          created_at: string
+        }
+        Insert: {
+          id?: number
+          amount: number
+          budget_id: number
+          category_id: number
+          created_at?: string
+        }
+        Update: {
+          id?: number
+          amount?: number
+          budget_id?: number
+          category_id?: number
+          created_at?: string
+        }
+      }
+      users: {
+        Row: {
+          id: number
+          username: string
+          password: string
+          created_at: string
+        }
+        Insert: {
+          id?: number
+          username: string
+          password: string
+          created_at?: string
+        }
+        Update: {
+          id?: number
+          username?: string
+          password?: string
+          created_at?: string
+        }
+      }
+    }
+  }
+}
 
 // Create a single supabase client for interacting with your database
 const supabaseUrl = process.env.SUPABASE_URL || '';

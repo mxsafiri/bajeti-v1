@@ -26,14 +26,30 @@
 - `migrations/`: Database migration files
 
 ### 1.3 Authentication Setup
-- [ ] Configure Wasp's built-in authentication
-- [ ] Create login/signup pages with Shadcn UI components
+- [x] Configure Wasp's built-in authentication
+- [x] Create login/signup pages with Shadcn UI components
+- [ ] Test authentication flow (login, signup, logout)
 - [ ] Implement protected routes
 
 **Key Files:**
 - `main.wasp`: Auth configuration
-- `src/pages/auth/login.tsx`: Login page
-- `src/pages/auth/signup.tsx`: Signup page
+- `src/pages/auth/LoginPage.tsx`: Login page
+- `src/pages/auth/SignupPage.tsx`: Signup page
+- `src/components/layout/Navigation.tsx`: Navigation with auth state
+
+### 1.4 Core Pages Setup
+- [x] Create Navigation component
+- [x] Create MainLayout component
+- [x] Create Landing page
+- [x] Create Dashboard page structure
+- [x] Create Transactions page structure
+- [x] Create Budgets page structure
+
+**Next Steps:**
+1. Test the authentication flow
+2. Implement data fetching for Dashboard
+3. Implement Transaction management
+4. Implement Budget management
 
 ## Phase 2: Expense Tracking Vertical Slice (Week 2)
 
